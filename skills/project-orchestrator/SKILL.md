@@ -1,6 +1,6 @@
 ---
 name: project-orchestrator
-description: 'ALWAYS USE THIS SKILL when the user''s message contains "orchestrator", or when they ask to "work in orchestrator mode", "manage the project but do not touch it yourself", "hand the work out to agents". In this workflow the agent NEVER edits the project directly: every change (writing code, fixing bugs, adding features, refactoring) goes to subagents. The orchestrator splits the request into tasks, asks which model tier to use on every new dispatch, watches the agents, verifies their results itself, reports briefly, checks project state, asks the user about next steps, and records every step in a markdown log. It also defines four approval gates (money, outgoing messages, deletion, secrets), mandatory blinding checks, a briefing contract, and routines against the orchestrator''s own measurement mistakes. Model-family neutral, with fallbacks for environments that cannot dispatch subagents. Works with Claude Code, Codex, Cowork and chat environments without subagents.'
+description: 'ALWAYS USE THIS SKILL when the user''s message contains "orchestrator", or when they ask to "work in orchestrator mode", "manage the project but do not touch it yourself", "hand the work out to agents". In this workflow the agent NEVER edits the project directly: every change (writing code, fixing bugs, adding features, refactoring) goes to subagents. The orchestrator splits the request into tasks, asks which model tier to use on every new dispatch, watches the agents, verifies their results itself, reports briefly, checks project state, asks the user about next steps, and records every step in a markdown log. It also defines four approval gates (money, outgoing messages, deletion, secrets), mandatory revert checks, a briefing contract, and routines against the orchestrator''s own measurement mistakes. Model-family neutral, with fallbacks for environments that cannot dispatch subagents. Works with Claude Code, Codex, Cowork and chat environments without subagents.'
 ---
 
 # Project orchestrator
@@ -87,7 +87,7 @@ Follow this loop for every user request:
   orchestrator measures.**
 - **Before measuring, check that the tree is in its real state** (`git status`,
   `git stash list`, `git diff --stat`). The agent may be in the middle of a
-  blinding check, so the tree may be **broken on purpose**. Skip this and you will
+  revert check, so the tree may be **broken on purpose**. Skip this and you will
   measure a deliberately broken tree and wrongly fail the agent's work.
 - **If the agent's report and your measurement disagree, question YOUR measurement
   setup first.** The verification tool itself can be broken: wrong machine, wrong
@@ -121,7 +121,7 @@ agent. All six go into every task:
    it.**"
 3. **Definition of done.** No work starts until "when done, these will be true" is
    written.
-4. **Mandatory blinding check** (section below).
+4. **Mandatory revert check** (section below).
 5. **Report contract:** what changed, which command ran, where the output is, the
    commit SHA, and **everything you could not verify, stated plainly.**
 6. **Long-command instruction:** the agent does not run the suite; it writes, says
@@ -138,7 +138,7 @@ that was not asked for but is needed? (2) Which raw source do they start from (t
 actual file, log or reference, not a ready-made summary)? (3) Which method and
 tools do they use? (4) Apart from the agent's word or yours, what proves the result
 is right (command output, a measurement, a comparison)? The answer to the fourth
-goes into the definition of done (3) and the blinding check (4).
+goes into the definition of done (3) and the revert check (4).
 
 ## Environment rules for briefs (Windows / Git Bash)
 
@@ -172,7 +172,7 @@ These came from incidents measured during a shell project's test rounds in Octob
 - **The orchestrator reproduces diagnoses like "it hung" or "the base code has this
   too" itself.** In one round, none of four such claims could be reproduced.
 
-## Blinding check (the evidence itself)
+## Revert check (the evidence itself)
 
 The proof that a fix works is **not** a green test. It is that the test goes
 **red without the fix.**
@@ -189,14 +189,14 @@ Also: **never make a red test pass by raising the expected number.** If the numb
 is the spec and the spec really changed, that is different, but say so plainly in
 the report.
 
-## The orchestrator makes mistakes too
+## Gotchas: the orchestrator makes mistakes too
 
 This skill does not assume the orchestrator is flawless. Measured pattern: **tool
 and environment errors get caught one step before blaming the product or the
 agent.** Real examples: calling a command in the wrong form (passing an argument to
 a command that reads stdin), reading the exit code at the end of a pipe
 (`cmd | tail` gives `tail`'s `$?`), relying on a tool that is not installed, and
-measuring while an agent is doing a blinding check.
+measuring while an agent is doing a revert check.
 
 Rules:
 - **If the measurement blames the product, question the tool first.** The first
@@ -271,7 +271,8 @@ the **cost/limit impact**, in one sentence.
 
     Limits: if the user says one side's limit is running low (Claude or Codex),
     suggest moving that side's work to the other; if you cannot measure the limit
-    yourself, do not guess, ask.
+    yourself, do not guess, ask. (The last two rows follow Avenox's video on going
+    from one agent to an agent team.)
 
 ## Progress log (mandatory)
 
@@ -340,7 +341,7 @@ this order:
    as the implementer**, then in a separate turn **only as the reviewer** measuring
    your own work, and tell the user about this split plainly. It is a weak
    fallback: the eye that wrote the work systematically misses its own mistakes, so
-   the blinding check is **even more** mandatory here.
+   the revert check is **even more** mandatory here.
 3. **Refuse.** If the work needs isolation (an independent review, for example) and
    the environment cannot give it, do not pretend; state the limitation.
 

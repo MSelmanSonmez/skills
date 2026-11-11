@@ -77,6 +77,16 @@ find ~/.gemini/antigravity-cli/brain -newer "$OUT/.marker" -type f \( -iname "*.
   running low, use the other. Otherwise prefer Codex, because it puts the file
   where you asked.
 
+## Gotchas
+
+- `codex exec` with an open stdin waits for more prompt text and looks hung; always
+  give it `</dev/null`.
+- Never point `-C` (Codex) or the working folder (agy) at your repository root: the
+  CLI reads the repo and treats its `AGENTS.md` as its own instructions.
+- `agy` ignores "save as X" and writes the image under
+  `~/.gemini/antigravity-cli/brain/<id>/`; without "wait for the image" in the
+  prompt, print mode exits before the image exists.
+
 ## Verify
 
 "I saved it" from Codex is not proof. Check that the file exists (`ls`) and look

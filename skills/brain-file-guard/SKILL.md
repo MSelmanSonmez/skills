@@ -17,7 +17,8 @@ allowed-tools: Bash, Read, Edit, Write
 
 # Brain file guard
 
-The flow is three steps: version check, backup, update. In a git repository the
+The flow is three steps: version check, backup, update (from Avenox's video on
+keeping a second-brain setup up to date). In a git repository the
 "version" is a commit and the "backup" is a clean, committed state. So the real
 work is making sure the file is committed before the change, and proving it is
 not broken after.
