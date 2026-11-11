@@ -67,8 +67,8 @@ record and of how much environment matters.
 | Unreal Engine incremental build (2-4 .cpp files) | laptop | 10-22 s | 2026-10-14 |
 | Unreal Engine first Shipping cook (`RunUAT BuildCookRun`, ~8,600 packages) | Windows 11 laptop, RTX 4050 | 2 min (estimate 20-60 min) | 2026-11-01 |
 | ffmpeg 60 s 1080p60 x264 medium | laptop | ~42 s | 2026-10-14 |
-| First `git push` of a repo, 1,284 commits, ~219 MB pack | laptop, Git Bash, SSH | 74 s (estimate 2-10 min) | 2026-10-17 |
-| Open-source leak audit agent, 479 commits + 25 tags | laptop, Claude Code | 6 min 22 s (estimate 5-10 min) | 2026-10-24 |
+| First `git push` of a repo, ~1,300 commits, ~220 MB pack | laptop, Git Bash, SSH | 74 s (estimate 2-10 min) | 2026-10-17 |
+| Open-source leak audit agent, ~480 commits | laptop, Claude Code | 6 min 22 s (estimate 5-10 min) | 2026-10-24 |
 | Image generation, one edit round (Codex built-in image tool) | laptop | 41-52 s (estimate 1-2 min) | 2026-10-22 |
 
 ## Gotchas
