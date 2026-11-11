@@ -4,8 +4,8 @@ Agent skills I use every day with Claude Code and Codex, cleaned up for
 anyone to use.
 
 Each skill is a folder with a `SKILL.md`, plain Markdown with no scripts or
-dependencies. Most of them came out of something that broke, and the Gotchas
-sections record what broke and how to avoid it.
+dependencies. Most of them came out of something that broke, and each one has a Gotchas
+section that records what broke and how to avoid it.
 
 > These skills were written with the help of Claude Code. I tested them in my own daily work; the measurements in them
 > (timings, failure cases) come from that work.
@@ -37,7 +37,7 @@ For Codex, copy into `.agents/skills/` in your project instead.
 
 | Skill | What it does |
 |---|---|
-| `project-orchestrator` | The agent never edits files itself. It splits work across subagents, asks which model tier to use, verifies results with blinding checks, and keeps a log. |
+| `project-orchestrator` | The agent never edits files itself. It splits work across subagents, asks which model tier to use, verifies results with revert checks, and keeps a log. |
 | `work-cards` | Hands self-contained work to a separate session with a task card, has a fresh agent review it, and asks you before merging. |
 | `cli-subagent` | Calls Codex CLI or Antigravity CLI as a one-shot, sandboxed subagent, mostly for image generation or a second opinion. |
 | `adopt-external-tool` | Research an outside repo or tool, scope it, dry-run, apply, verify, record. Built for tools that change how your agent works. |
@@ -56,9 +56,10 @@ Each skill has a Gotchas section. A few that cost real time:
 - Running a tool's `init --agents claude` and later `init --agents agents` silently
   deleted all the wiring from the first call. Pass every target in one call.
   (`adopt-external-tool`)
-- The same shell test suite took about 3.5 minutes on native Linux and between
-  35 minutes and 12.5 hours in Git Bash on Windows. Estimate from rows measured on
-  the same setup. (`runtime-estimate`)
+- The same shell test suite took 3.5 minutes on native Linux, about 32 minutes
+  under WSL, and anywhere from 35 minutes to about 25 hours in Git Bash on Windows
+  (suite versions differed; the cause of the long runs was never isolated).
+  Estimate only from rows measured on the same setup. (`runtime-estimate`)
 - `</dev/null` on a heredoc script (`python - <<EOF`) replaces the script with an
   empty stdin, and python sits in its REPL forever. Write the script to a file
   instead. (`project-orchestrator`)

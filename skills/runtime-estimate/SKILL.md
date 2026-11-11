@@ -5,8 +5,9 @@ description: |
   download, render), tell the user how long it will take and where the estimate
   comes from; when it finishes, report the real time and add it to the table of
   measured runtimes.
-  Use before any command that may run longer than 30 seconds, when writing a
-  prompt that has another agent run a suite or long job, and when the user asks
+  Use before every test suite, build or render, even one you expect to be quick
+  (then say "not measured" and estimate anyway), before any other command that
+  may run longer than 30 seconds, when writing a prompt that has another agent run a suite or long job, and when the user asks
   "how long will this take".
   Do not use for commands that finish instantly (git status, reading, a single
   file edit).
@@ -58,9 +59,10 @@ record and of how much environment matters.
 | Same suite (~1,600 tests), another session busy all day | Windows laptop, Git Bash, background task | 10 h 54 min | 2026-10-15 |
 | Same suite (1,550 tests), alone | Windows 10 desktop, Git Bash | 12 h 32 min (estimate 2-8 h, missed) | 2026-10-17 |
 | Same suite (~1,490 tests), heavy parallel agent load | Windows 10 desktop, Git Bash | ~25 h | 2026-10-16 |
+| Same suite | Linux / WSL | ~32 min | 2026-10-10 |
 | Same suite (1,592 tests) | Linux laptop, native shell | 3 min 27 s (estimate 10-20 min) | 2026-10-18 |
 | Same suite on CI, three OSes | GitHub Actions | ubuntu 3 min 50 s, macOS 8 min 55 s, Windows 67 min 29 s | 2026-10-25 |
-| One isolated test block (blinding check) | Git Bash | ~50 s | 2026-10-10 |
+| One isolated test block (revert check) | Git Bash | ~50 s | 2026-10-10 |
 | `uv sync` with CUDA torch (~4 GB) | laptop, ~2.6 MB/s | 26 min (estimate 45-60 min) | 2026-10-14 |
 | Unreal Engine incremental build (2-4 .cpp files) | laptop | 10-22 s | 2026-10-14 |
 | Unreal Engine first Shipping cook (`RunUAT BuildCookRun`, ~8,600 packages) | Windows 11 laptop, RTX 4050 | 2 min (estimate 20-60 min) | 2026-11-01 |
@@ -71,11 +73,14 @@ record and of how much environment matters.
 
 ## Gotchas
 
-- **Git Bash on Windows is the outlier.** The same shell-heavy suite ran in about
-  3.5 minutes on native Linux and took anywhere from 35 minutes to 12.5 hours in
-  Git Bash. If a shell suite will run on Windows, estimate from Windows rows only.
-- **A busy machine changes everything.** Another agent session running at the same
-  time roughly doubled the suite time (12.5 h alone, ~25 h under load). Before trusting a row, check what else is
+- **The same suite can differ by 100x across setups.** One shell-heavy suite took
+  3.5 minutes on native Linux, about 32 minutes under WSL, and from 35 minutes to
+  about 25 hours in Git Bash on Windows. Suite versions differed between runs and
+  the cause of the long Windows runs was never isolated. Estimate only from rows
+  measured on the same machine and shell.
+- **A busy machine is a suspect.** The longest Windows run (~25 h) happened under
+  heavy parallel agent load; a run alone took 12.5 h (different commits, so this is
+  a suspicion, not a measurement). Before trusting a row, check what else is
   running and whether the laptop is on battery or a power-saving profile.
 - **Short jobs get overestimated, long jobs underestimated.** In the table above,
   installs, cooks and pushes beat the estimate by 2x or more, while the long suite
