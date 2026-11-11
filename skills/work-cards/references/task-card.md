@@ -37,12 +37,13 @@ When the work is done (or stops halfway), write a record, then report. The recor
 goes to the main checkout, not the worktree:
 - One line at the end of your session log:
   `- HH:MM [Card NNN] <what was done>; branch and commit; evidence path; what is left; next step.`
-  Take the time from `date +%H:%M`.
+  Take the time from `date +%H:%M`. Add your line at the end; never change earlier lines.
 - The progress line of the related plan, if there is one.
 - Commit only those paths:
   `git -C <main checkout> add -- <paths>` and
   `git -C <main checkout> commit -m "records: Card NNN" -- <paths>`.
   On an `index.lock` error, retry after a few seconds.
+- Do not edit the dispatcher's own records (session summary, open topics, rules).
 
 ## Report
 When done, stuck, or when a decision is needed, one sentence: what you did, where

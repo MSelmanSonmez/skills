@@ -64,7 +64,9 @@ and a `select:` query):
   `use_worktree: false`.
 - `model`: a mid-tier model for mechanical, well-specified work, effort medium to
   high; the dispatcher stays on the strong model.
-- `prompt`: the full card, or the absolute path to the saved card file.
+- `prompt`: the full card, or the absolute path to the saved card file. If your
+  cards use a way-of-working skill (for example `project-orchestrator`), make
+  loading it the prompt's first sentence.
 - `wake_when_done: true`.
 - Right before the call, a bold title line and one sentence; afterwards, a
   progress line in the plan. Do not wait or poll.
@@ -112,7 +114,8 @@ Only after the worker's record and the updates in step 5 are committed:
 3. Delete the branch with `git branch -d`. An unmerged branch will not delete;
    then ask the user.
 
-Ask the user once whether this cleanup may run without asking each time.
+Before the first cleanup, ask the user once whether steps 1-3 may run without
+asking each time. After a yes, run them without further questions.
 
 ## Without the desktop app
 
@@ -128,8 +131,9 @@ by hand, and the dispatcher reads only the card folders.
 
 - An "offer" card (new work, the user picked "New session") is still a card: the
   brief that goes with its `proposal_id` uses the same template. It is easy to
-  forget; a small PreToolUse hook that rejects `start_session` briefs without a
-  required phrase catches it mechanically.
+  forget; a small PreToolUse hook that rejects `start_session` calls whose brief
+  lacks a phrase you require (for example the name of the skill the worker must
+  load first) catches it mechanically.
 - `effort` cannot exceed the main session's: if the main session runs at
   `medium`, a worker asked for `high` still starts at `medium`. After starting, read
   the real value with `get_session` and tell the user that value.
