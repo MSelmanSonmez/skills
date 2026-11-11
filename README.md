@@ -35,8 +35,6 @@ For Codex, copy into `.agents/skills/` in your project instead.
 
 ## The skills
 
-<!-- TODO(A2): fill each row when the skill lands. -->
-
 | Skill | What it does |
 |---|---|
 | `project-orchestrator` | The agent never edits files itself. It splits work across subagents, asks which model tier to use, verifies results with blinding checks, and keeps a log. |
@@ -48,7 +46,22 @@ For Codex, copy into `.agents/skills/` in your project instead.
 
 ## Gotchas
 
-<!-- TODO(A2): 4-5 measured gotchas from the skills. -->
+Each skill has a Gotchas section. A few that cost real time:
+
+- `codex exec` with an open stdin waits for more prompt text and looks hung.
+  Give it `</dev/null`. (`cli-subagent`)
+- Antigravity CLI (`agy`) ignores "save as X": the image lands under
+  `~/.gemini/antigravity-cli/brain/<id>/`. And unless the prompt says to wait for
+  the image, print mode exits before it is done. (`cli-subagent`)
+- Running a tool's `init --agents claude` and later `init --agents agents` silently
+  deleted all the wiring from the first call. Pass every target in one call.
+  (`adopt-external-tool`)
+- The same shell test suite took about 3.5 minutes on native Linux and between
+  35 minutes and 12.5 hours in Git Bash on Windows. Estimate from rows measured on
+  the same setup. (`runtime-estimate`)
+- `</dev/null` on a heredoc script (`python - <<EOF`) replaces the script with an
+  empty stdin, and python sits in its REPL forever. Write the script to a file
+  instead. (`project-orchestrator`)
 
 ## Requirements
 
